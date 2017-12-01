@@ -1,0 +1,94 @@
+<html>
+<head>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="  crossorigin="anonymous"></script>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="index.js"></script>
+   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+   <link rel="stylesheet" href="styles.css">
+</head>
+<body class="container">
+  <div class="header row">
+    <h1 class="col-xs-3">TOOLBAG</h1>
+  </div>
+  <div class="content row">
+    <div class="menu col-xs-4 col-sm-2">
+      <ul class="nav nav-pills nav-stacked">
+       <li role="presentation" data="servers"><a href="#">Servers</a></li>
+       <li role="presentation" data="devices" class="active"><a href="#">Devices</a></li>
+       <li role="presentation" data="sensors"><a href="#">Sensors</a></li>
+       <li role="presentation" data="homes"><a href="#">Homes</a></li>
+      </ul>
+    </div>
+    <div class="col-xs-8 col-sm-10">
+      <div class="content-page hidden" id="servers">
+      </div>
+      <div class="content-page" id="devices">
+      </div>
+      <div class="content-page hidden" id="sensors">
+      </div>
+      <div class="content-page hidden" id="homes">
+      </div>
+    </div>
+
+    <div id="device-detail" class="container hidden">
+      <div class="action-bar row">
+        <button class="btn btn-primary save">SAVE</button>
+        <button class="btn btn-default cancel">Cancel</button>
+        <button class="btn btn-danger pull-right delete">DELETE</button>
+      </div>
+      <div class="device-detail-content row">
+        <form class="form-horizontal">
+          <div class="col-xs-5">
+            <div class="form-group form-group-sm">
+              <label class="control-label" for="deviceID">Device ID</label>
+              <input type="text" class="form-control" id="deviceID">
+            </div>
+            <div class="form-group form-group-sm">
+              <label class="control-label" for="deviceName">Device Name</label>
+              <input type="text" class="form-control" id="deviceName">
+            </div>
+            <div class="form-group form-group-sm">
+              <label class="control-label" for="deviceLocation">Device Location</label>
+              <input type="text" class="form-control" id="deviceLocation">
+            </div>
+            <div class="form-group form-group-sm">
+              <label class="control-label" for="deviceIP">Device IP</label>
+              <input type="text" class="form-control" id="deviceIP">
+            </div>
+            <div class="form-group form-group-sm">
+              <label class="control-label" for="targetServer">Target Server IP</label>
+              <input type="text" class="form-control" id="targetServer">
+            </div>
+            <div class="form-group form-group-sm">
+              <label class="control-label" for="httpPort">Target Server Port</label>
+              <input type="text" class="form-control" id="httpPort">
+            </div>
+          </div>
+          <div class="col-xs-offset-2 col-xs-5">
+            <div class="form-group form-group-sm">
+              <label class="control-label" for="type">Device Type</label>
+              <input type="text" class="form-control" id="type">
+            </div>
+            <div class="form-group form-group-sm">
+              <label class="control-label" for="deviceBoard">Device Board Type</label>
+              <input type="text" class="form-control" id="deviceBoard">
+            </div>
+            <div class="form-group form-group-sm">
+              <label class="control-label" for="deviceSwVersion">SW version</label>
+              <input type="text" class="form-control" id="deviceSwVersion">
+            </div>
+          </div>
+          <div class="col-xs-12">
+            <div class="form-group form-group-sm">
+              <label class="control-label" for="note">Note</label>
+              <input type="text" class="form-control" id="note">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
