@@ -2,7 +2,7 @@ package main
 
 import (
 	"net/http"
-	"github.com/mkrcek/test-web-api/server-device/mydevices"
+	"github.com/mkrcek/sql-server/server/mydevices"
 	)
 
 

@@ -3,7 +3,7 @@ package mydevices
 import (
 	"errors"
 	"net/http"
-	"github.com/mkrcek/test-web-api/server-device/config"
+	"github.com/mkrcek/sql-server/server/config"
 	"encoding/json"
 	"fmt"
 )
