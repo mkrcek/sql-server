@@ -22,7 +22,7 @@ type Device struct {
 }
 
 type DeviceSetup struct {				//for JSON
-	DeviceID	int `json:"deviceID"`
+	DeviceID	int `json:"deviceId"`
 	DeviceName   string `json:"deviceName"`
 	DeviceLocation  string `json:"deviceLocation"`
 	DeviceIP string `json:"deviceIP"`
@@ -80,8 +80,8 @@ func PutDevicePost(r *http.Request) (Device, error) {
 
 	dv := Device{}
 
-	len := r.ContentLength
-	body := make([]byte, len)
+	lenBody := r.ContentLength
+	body := make([]byte, lenBody)
 	r.Body.Read(body)
 	var post DeviceSetup //vytěžení z JSON parametrů
 	json.Unmarshal(body, &post)
@@ -113,8 +113,8 @@ func UpdateBookApi(r *http.Request, rowNumber int) (Device, error) {
 
 	dv := Device{}
 
-	len := r.ContentLength
-	body := make([]byte, len)
+	lenBody := r.ContentLength
+	body := make([]byte, lenBody)
 	r.Body.Read(body)
 	var post DeviceSetup //vytěžení z JSON parametrů
 
@@ -176,4 +176,5 @@ func DeleteBookApi(r *http.Request, rowNumber int) error {
 }
 
 
-//není potřeba zavřít DB?
+//k odpovězení
+//není potřeba zavřít někde DB? Dělám to jen v defer rows.Close() v AllDevices

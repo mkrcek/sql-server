@@ -9,7 +9,7 @@ import (
 	"regexp"
 	"strings"
 	"strconv"
-	//"github.com/mkrcek/test-web-api/server-device/config"
+	"github.com/mkrcek/sql-server/server/config"
 )
 
 
@@ -158,6 +158,7 @@ func UpdateApi(w http.ResponseWriter, r *http.Request, rowNumber int) {
 		return
 	}
 
+
 	//úprava hlavičky
 	//w.Header().Set("Content-Length", "0") - POZOR DELKA NEMUZE BYT NULA
 	w.Header().Set("Connection", "keep-alive")
@@ -169,9 +170,12 @@ func UpdateApi(w http.ResponseWriter, r *http.Request, rowNumber int) {
 	//zpráva do těla
 	w.Write([]byte("OK UPDATED"))
 
+
 	fmt.Println("***************")
 	fmt.Println("Update   : ", dv)
 	fmt.Println("***************")
+	fmt.Println(dv.deviceBoard)
+	fmt.Println(dv.deviceID)
 }
 
 func DeleteApi(w http.ResponseWriter, r *http.Request, rowNumber int) {
@@ -203,6 +207,7 @@ func HandleRootDevice(w http.ResponseWriter, req *http.Request) {
 
 	////config.TPL.ExecuteTemplate(w, "update.gohtml", bk)
 
+	fmt.Printf("AHHHOJ")
 
 	w.Header().Set("Content-Type", "application/text") //nebo text/json
 	w.Header().Set("Connection", "keep-alive")
@@ -213,7 +218,6 @@ func HandleRootDevice(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Access-Control-Max-Age", "86400")
 
 	fmt.Println("This is my text in ROOT")
-
 
 	//config.TPL.ExecuteTemplate(w, "/index.html", nil)
 
@@ -237,8 +241,6 @@ func OptionsApi(w http.ResponseWriter, req *http.Request) {
 
 func HandleMain(w http.ResponseWriter, r *http.Request) {
 
-
-
 	//nalezení, jeslti je zvolený nějaký konkrétní řádek /zázmam = ID (číslo)
 	//...číslo za lomítkem, např./devices/21293 = 21293
 	myURL := r.RequestURI        // req.URL vs req.RequestURI		"/devices/21293"
@@ -248,7 +250,7 @@ func HandleMain(w http.ResponseWriter, r *http.Request) {
 	ulrDeviceID, _ := strconv.Atoi(ulrDeviceIDstr)			//převede na číslo
 
 	fmt.Println("parametr: ", ulrDeviceID)
-	fmt.Println("metoda: ", r.Method)		//výpis metody - jen tak
+	fmt.Println("metoda: ", r.Method)		//výpis metody - jen pro info
 
 	switch r.Method {
 
@@ -279,4 +281,25 @@ func HandleMain(w http.ResponseWriter, r *http.Request) {
 		//DELETE localhost:8080/mydevices/2
 		//smaže 2.záznam
 	}
+}
+
+
+func RootTest(w http.ResponseWriter, req *http.Request) {
+
+	config.TPL.ExecuteTemplate(w, "index.html", nil)
+
+
+	////config.TPL.ExecuteTemplate(w, "update.gohtml", bk)
+
+	//
+	//w.Header().Set("Content-Type", "application/text") //nebo text/json
+	//w.Header().Set("Connection", "keep-alive")
+	////rw.Header().Set("Access-Control-Allow-Origin", "http://localhost:8080/device")
+	//w.Header().Set("Access-Control-Allow-Origin", "*")
+	//w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE")
+	//w.Header().Set("Access-Control-Allow-Headers", "X-Requested-With,content-type");
+	//w.Header().Set("Access-Control-Max-Age", "86400")
+	//
+	//fmt.Println("This is my text in TEST")
+	//w.Write([]byte("This is my text in TEST "))
 }

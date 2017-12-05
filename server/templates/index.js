@@ -1,12 +1,11 @@
 window.Arduino = {};
-window.onload = function() { //provede se po nahrátí stránky
-   Arduino.axios = axios.create({
-     baseURL: '/',
-       //baseURL: 'http://localhost:8080/',
-     timeout: 100000
-   });
+window.onload = function() {
+  Arduino.axios = axios.create({
+    baseURL: 'http://localhost:8080/',
+    timeout: 100000
+  });
 
-  // Arduino.axios = {   //testovací data
+  // Arduino.axios = {
   //   get: function() {
   //     return new Promise((resolve, reject) => {
   //       resolve(this.response);
@@ -14,6 +13,12 @@ window.onload = function() { //provede se po nahrátí stránky
   //   },
   //
   //   post: function() {
+  //     return new Promise((resolve, reject) => {
+  //       resolve("OK");
+  //     });
+  //   },
+  //
+  //   put: function() {
   //     return new Promise((resolve, reject) => {
   //       resolve("OK");
   //     });
@@ -30,61 +35,61 @@ window.onload = function() { //provede se po nahrátí stránky
   //   }
   // };
 
-  Arduino.chartsStatus = Arduino.initializeGoogleCharts(); //grafy
+  Arduino.chartsStatus = Arduino.initializeGoogleCharts();
   Arduino.initializeNavigation();
   Arduino.initializeDevices();
   Arduino.initDeviceDetail();
+  Arduino.initNewDeviceDetail();
 }
 
-Arduino.initializeGoogleCharts = function() {   //na pozadí nahrává
+Arduino.initializeGoogleCharts = function() {
   google.charts.load('current', {'packages':['table']});
 
   return new Promise((resolve, reject) => {
-    google.charts.setOnLoadCallback(() => {   //co se stane, až se grafy nahrají
-      resolve();      //tak se spustí toto
+    google.charts.setOnLoadCallback(() => {
+      resolve();
     });
   });
 
 }
 
-Arduino.initializeNavigation = function() {   //navigace
+Arduino.initializeNavigation = function() {
 
-  $('.menu li').click((e) => {          //naco se klikne, to se ozna
+  $('.menu li').click((e) => {
 
     var selectedNav = $(e.currentTarget);
     $('.menu li').removeClass('active');
     selectedNav.addClass('active');
 
     var id = selectedNav.attr('data');
-    $('.content-page').attr('hidden', 'hidden');  //nastaví, které stranky-položky menu- jsou hidden
+    $('.content-page').attr('hidden', 'hidden');
     $('.content-page[id="'+id+'"]').attr('hidden', false);
   });
 }
 
 Arduino.initializeDevices = function() {
   // Arduino.axios.setResponse({
-  //   data: {
-  //    	devices: [
+  //   data: [
   //       {deviceId: 1, deviceName: 'Ovladac garaze',  deviceLocation: 'Garaz', deviceAddress: '192.168.0.44'},
   //       {deviceId: 2, deviceName: 'Bouda ovladac',   deviceLocation: 'Bouda',  deviceAddress: '192.168.0.41'},
   //       {deviceId: 3, deviceName: 'Pracovna',   deviceLocation: 'Dum 1.PP',  deviceAddress: '192.168.0.32'},
   //       {deviceId: 4, deviceName: 'Matejuv pokoj',   deviceLocation: 'Dum 1.NP',  deviceAddress: '192.168.0.46'}
   //     ]
-  //   }
   // });
 
-  Arduino.axios.get('/mydevices/')      //volání Rest api GET
+  Arduino.axios.get('/devices/')
     .then(function (response) {
-      Arduino.chartsStatus.then(() => {   //vrátí promis - až je to nahrané(naloadované)
-        console.log(response)
-          Arduino.drawDevicesTable(response.data); //response.data.devices
+      Arduino.chartsStatus.then(() => {
+        Arduino.drawDevicesTable(response.data);
       })
     })
     .catch(function (error) {
       console.log(error);
     });
 
-
+    $('#devices .add').click(() => {
+      $('#new-device-detail').removeClass('hidden');
+    });
 }
 
 Arduino.drawDevicesTable = function(devices) {
@@ -92,13 +97,13 @@ Arduino.drawDevicesTable = function(devices) {
   data.addColumn('number', 'Id');
   data.addColumn('string', 'Name');
   data.addColumn('string', 'Location');
-  data.addColumn('string', 'Address');
+  data.addColumn('string', 'IP address');
 
   devices.forEach((d) => {
-    data.addRow([d.deviceID, d.deviceName, d.deviceLocation, d.deviceIP]);
+    data.addRow([d.deviceId, d.deviceName, d.deviceLocation, d.deviceLocation]);
   })
 
-  var table = new google.visualization.Table(document.getElementById('devices'));
+  var table = new google.visualization.Table(document.querySelector('#devices .table'));
 
   google.visualization.events.addListener(table, 'select', selectHandler);
 
@@ -119,9 +124,9 @@ Arduino.initDeviceDetail = function() {
     $('#device-detail').addClass('hidden');
   });
 
-  $('#device-detail .delete').click(() => {     //DELETE
+  $('#device-detail .delete').click(() => {
     $('#device-detail').addClass('hidden');
-    Arduino.axios.delete('/devices/' + $('#deviceID').val())
+    Arduino.axios.delete('/devices/' + $('#device-detail input[name="deviceId"]').val())
       .then(function (response) {
         console.log('deleted!')
       })
@@ -130,26 +135,24 @@ Arduino.initDeviceDetail = function() {
       });
   });
 
-  $('#device-detail .save').click(() => {     //POST
+  $('#device-detail .save').click(() => {
     $('#device-detail form').submit();
     $('#device-detail').addClass('hidden');
   });
 
   $('#device-detail form').submit((event) => {
-    console.log(event);
-    Arduino.axios.post('/devices/' + deviceID, {       //POST  // get('/devices/' + deviceId,
-      data: {
-        deviceID:  $('#deviceID').val(),
-        deviceName:  $('#deviceName').val(),
-        deviceLocation:  $('#deviceLocation').val(),
-        type:  $('#type').val(),
-        deviceBoard:  $('#deviceBoard').val(),
-        deviceSwVersion:  $('#deviceSwVersion').val(),
-        targetServer:  $('#targetServer').val(),
-        httpPort:  $('#httpPort').val(),
-        note:  $('#note').val(),
-        deviceIP:  $('#deviceIP').val()
-      }
+    Arduino.axios.put('/devices/' + $('#device-detail input[name="deviceId"]').val(), {
+        deviceId:  $('#device-detail input[name="deviceId"]').val(),
+        deviceName:  $('#device-detail input[name="deviceName"]').val(),
+        deviceLocation:  $('#device-detail input[name="deviceLocation"]').val(),
+        deviceIP:  $('#device-detail input[name="deviceIP"]').val(),
+        deviceType:  $('#device-detail input[name="deviceType"]').val(),
+        deviceBoard:  $('#device-detail input[name="deviceBoard"]').val(),
+        deviceSwVersion:  $('#device-detail input[name="deviceSwVersion"]').val(),
+        targetServer:  $('#device-detail input[name="targetServer"]').val(),
+        httpPort:  $('#device-detail input[name="httpPort"]').val(),
+        note:  $('#device-detail input[name="note"]').val()
+
     })
       .then(function (response) {
         console.log('created!');
@@ -161,10 +164,43 @@ Arduino.initDeviceDetail = function() {
   });
 }
 
-Arduino.showDeviceDetail = function(deviceID) {
+Arduino.initNewDeviceDetail = function() {
+  $('#new-device-detail .cancel').click(() => {
+    $('#new-device-detail').addClass('hidden');
+  });
+
+  $('#new-device-detail .save').click(() => {
+    $('#new-device-detail form').submit();
+    $('#new-device-detail').addClass('hidden');
+  });
+
+  $('#new-device-detail form').submit((event) => {
+    Arduino.axios.post('/devices/' + $('#new-device-detail input[name="deviceId"]').val(), {
+        deviceId:  $('#new-device-detail input[name="deviceId"]').val(),
+        deviceName:  $('#new-device-detail input[name="deviceName"]').val(),
+        deviceLocation:  $('#new-device-detail input[name="deviceLocation"]').val(),
+      deviceIP:  $('#new-device-detail input[name="deviceIP"]').val(),
+        deviceType:  $('#new-device-detail input[name="deviceType"]').val(),
+        deviceBoard:  $('#new-device-detail input[name="deviceBoard"]').val(),
+        deviceSwVersion:  $('#new-device-detail input[name="deviceSwVersion"]').val(),
+        targetServer:  $('#new-device-detail input[name="targetServer"]').val(),
+        httpPort:  $('#new-device-detail input[name="httpPort"]').val(),
+        note:  $('#new-device-detail input[name="note"]').val()
+
+    })
+      .then(function (response) {
+        console.log('created!');
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    event.preventDefault();
+  });
+}
+
+Arduino.showDeviceDetail = function(deviceId) {
   // Arduino.axios.setResponse({
-  //   "data": {"device":
-  //   	{
+  //   "data": {
 	//        "deviceId":2,
 	//        "deviceName":"GarageController",
   //        "deviceLocation":"Garage",
@@ -178,24 +214,24 @@ Arduino.showDeviceDetail = function(deviceID) {
 	//       "httpPort":9090,
 	//       "note":"super device"
 	//     }
-  //   }
   // });
 
-  Arduino.axios.get('/devices/' + deviceID)
+  Arduino.axios.get('/devices/' + deviceId)
     .then(function (response) {
-      var device = response.data.device;
+      var device = response.data;
 
       $('#device-detail').removeClass('hidden');
-      $('#deviceID').val(device.deviceID);
-      $('#deviceName').val(device.deviceName);
-      $('#deviceLocation').val(device.deviceLocation);
-      $('#type').val(device.type);
-      $('#deviceBoard').val(device.deviceBoard);
-      $('#deviceSwVersion').val(device.deviceSwVersion);
-      $('#targetServer').val(device.targetServer);
-      $('#httpPort').val(device.httpPort);
-      $('#note').val(device.note);
-      $('#deviceIP').val(device.deviceIP);
+      $('#device-detail input[name="deviceId"]').val(device.deviceId);
+      $('#device-detail input[name="deviceName"]').val(device.deviceName);
+      $('#device-detail input[name="deviceLocation"]').val(device.deviceLocation);
+        $('#device-detail input[name="deviceIP"]').val(device.deviceIP);
+      $('#device-detail input[name="deviceType"]').val(device.deviceType);
+      $('#device-detail input[name="deviceBoard"]').val(device.deviceBoard);
+      $('#device-detail input[name="deviceSwVersion"]').val(device.deviceSwVersion);
+      $('#device-detail input[name="targetServer"]').val(device.targetServer);
+      $('#device-detail input[name="httpPort"]').val(device.httpPort);
+      $('#device-detail input[name="note"]').val(device.note);
+
 
     })
     .catch(function (error) {
