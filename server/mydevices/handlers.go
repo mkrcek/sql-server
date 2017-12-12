@@ -96,6 +96,9 @@ func ShowApi(w http.ResponseWriter, r *http.Request, rowNumber int) {
 	//úprava hlavičky
 	//w.Header().Set("Content-Length", "0") - POZOR DELKA NEMUZE BYT NULA
 	w.Header().Set("Connection", "keep-alive")
+//nově:
+	w.Header().Set("Content-Type", "application/json") //
+
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "X-Requested-With,content-type");

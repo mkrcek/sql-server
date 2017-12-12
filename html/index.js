@@ -155,6 +155,7 @@ Arduino.initDeviceDetail = function() {
 
     })
       .then(function (response) {
+          Arduino.initializeDevices();
         console.log('created!');
       })
       .catch(function (error) {

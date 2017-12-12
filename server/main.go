@@ -10,12 +10,12 @@ import (
 func main() {
 
 	http.HandleFunc("/devices/", mydevices.HandleMain)
-	http.HandleFunc("/", mydevices.HandleRootDevice)
-	//root
+
 
 	http.HandleFunc("/test/", mydevices.RootTest)
 	//pokusný handler pro integraci  HTML /JS do web serveru
-
+	http.HandleFunc("/", mydevices.HandleRootDevice)
+	//root
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -28,3 +28,11 @@ func main() {
 //https://jsonlint.com/
 
 
+
+
+//co chci udělat
+// - refresh po uložení
+// - podpora v index
+// - sqlight
+// - více tabulek přohlížení
+// - a provázanost
