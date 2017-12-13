@@ -10,6 +10,7 @@ import (
 	"strings"
 	"strconv"
 	"github.com/mkrcek/sql-server/server/config"
+
 )
 
 
@@ -208,7 +209,6 @@ func DeleteApi(w http.ResponseWriter, r *http.Request, rowNumber int) {
 
 func HandleRootDevice(w http.ResponseWriter, req *http.Request) {
 
-	////config.TPL.ExecuteTemplate(w, "update.gohtml", bk)
 
 	fmt.Printf("AHHHOJ")
 
@@ -225,6 +225,7 @@ func HandleRootDevice(w http.ResponseWriter, req *http.Request) {
 	//config.TPL.ExecuteTemplate(w, "/index.html", nil)
 
 	w.Write([]byte("This is my text in ROOT"))
+
 }
 
 func OptionsApi(w http.ResponseWriter, req *http.Request) {
@@ -289,7 +290,13 @@ func HandleMain(w http.ResponseWriter, r *http.Request) {
 
 func RootTest(w http.ResponseWriter, req *http.Request) {
 
-	config.TPL.ExecuteTemplate(w, "index.html", nil)
+
+	err := config.TPL.ExecuteTemplate(w, "index-old.html", 22)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
 
 
 	////config.TPL.ExecuteTemplate(w, "update.gohtml", bk)
